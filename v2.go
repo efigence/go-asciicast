@@ -39,6 +39,7 @@ func NewCastV2(meta CastMetadata, fd io.Writer) (*CastV2Header, error) {
 	c.Height = meta.Height
 	c.Title = meta.Title
 	c.Command = meta.Command
+	// drop TS if it is null or before unix time
 	if meta.Timestamp.Unix() > 0 {
 		ts := JSONTimestamp(meta.Timestamp)
 		c.Timestamp = &ts
@@ -50,7 +51,7 @@ func NewCastV2(meta CastMetadata, fd io.Writer) (*CastV2Header, error) {
 		c.Env = &meta.Env
 	}
 	c.outputStream = json.NewEncoder(fd)
-	c.outputStream.Encode(&c)
+	c.outputStream.Encode(c)
 	return &c, nil
 }
 

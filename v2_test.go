@@ -11,7 +11,10 @@ import (
 func TestV2Header(t *testing.T) {
 	_ = time.Now()
 	var buf1 bytes.Buffer
-	testV2, newErr := NewCastV2(CastMetadata{},&buf1)
+	var zeroTime time.Time
+	testV2, newErr := NewCastV2(CastMetadata{
+		Timestamp: zeroTime, // this TS should be dropped
+	},&buf1)
 	testV2.PushFrame(0.1, []byte("frame1"))
 	testV2.PushFrame(0.2, []byte("frame2"))
 	outStr := buf1.String()
@@ -40,6 +43,9 @@ func TestV2Header(t *testing.T) {
 		Timestamp: ts,
 		Duration:  time.Minute,
 		Command:   "/bin/bash",
+		Env: map[string]string{
+			"PATH": "/bin:/usr/bin",
+		},
 	},&buf2)
 	testV2.PushFrame(0.3, []byte("frame3"))
 	testV2.PushFrame(0.4, []byte("frame4"))
