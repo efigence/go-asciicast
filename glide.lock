@@ -1,0 +1,23 @@
+hash: e9652143a64f4b08f75e68ad8707f2d0fd35f4510f67ffff595606fb4928b1fd
+updated: 2017-11-03T17:49:40.483601731+01:00
+imports:
+- name: github.com/augurysys/timestamp
+  version: 795b270c098bc173431a1b241a412d8218a71052
+testImports:
+- name: github.com/gopherjs/gopherjs
+  version: 444abdf920945de5d4a977b572bcc6c674d1e4eb
+  subpackages:
+  - js
+- name: github.com/jtolds/gls
+  version: 77f18212c9c7edc9bd6a33d383a7b545ce62f064
+- name: github.com/smartystreets/assertions
+  version: 0b37b35ec7434b77e77a4bb29b79677cced992ea
+  subpackages:
+  - internal/go-render/render
+  - internal/oglematchers
+- name: github.com/smartystreets/goconvey
+  version: e5b2b7c9111590d019a696c7800593f666e1a7f4
+  subpackages:
+  - convey
+  - convey/reporting
+  - convey/gotest
