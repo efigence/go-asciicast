@@ -1,7 +1,7 @@
 package asciicast
 
 type CastV1 struct {
-	Version int `json:"version"` //always 1
+	Version uint `json:"version"` //always 1
 	Width uint `json:"width"`   //#: 80,
 	Height uint `json:"height"`   //#: 24,
 	Duration float64 `json:"duration"`   //#: 1.515658,
@@ -10,6 +10,16 @@ type CastV1 struct {
 	Env *map[string]string  `json:"env"`
 	Stdout [][]interface{}  `json:"stdout"`// [[ts in float, data],[ts in float,data]
 }
+// NewCastV1() emits v1 formatted data which is just a big fat json.
+// after pushing all frames via PushFrame() just json.Marshal(cast) to get the output stream
+//
+//	        asc := asciicast.NewCastV1(asciicast.CastMetadata{
+//              Width: 80,
+//              Height: 24,
+//          })
+//	        asc.PushFrame(0.2, "test")
+//	        b, err := json.Marshal(asc)
+//	        fmt.Printf("json:\n%s\n---\n%s\n)",string(b),err
 
 func NewCastV1(meta CastMetadata) (CastV1, error){
 	var c CastV1

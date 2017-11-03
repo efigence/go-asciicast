@@ -1,9 +1,13 @@
 package asciicast
 
 import (
+	"io"
+	"encoding/json"
 )
 
-
+const V2OutputEvent = "o"
+const V2InputEvent = "i"
+const V2SizeEvent = "size"
 
 type CastV2Header struct {
 	Version uint `json:"version"`
@@ -17,6 +21,7 @@ type CastV2Header struct {
 	// this is a pointer only because that's the easiest way to force Golang's
 	// JSON marshaller to not emit it if empty
 	Theme *CastV2Theme `json:"theme,omitempty"`
+	outputStream *json.Encoder
 }
 
 type CastV2Theme struct {
@@ -25,11 +30,10 @@ type CastV2Theme struct {
 	Palette string `json:"palette"`
 }
 
-
-
-
-
-func NewCastV2(meta CastMetadata) (c CastV2Header, err error) {
+// Version 2 cast uses streaming, therefore you need to pass IO stream to it
+// Header will be automatically emitted after cast is created
+func NewCastV2(meta CastMetadata, fd io.Writer) (*CastV2Header, error) {
+	var c CastV2Header
 	c.Version = 2
 	c.Width = meta.Width
 	c.Height = meta.Height
@@ -45,5 +49,15 @@ func NewCastV2(meta CastMetadata) (c CastV2Header, err error) {
 	if meta.Env != nil {
 		c.Env = &meta.Env
 	}
-	return
+	c.outputStream = json.NewEncoder(fd)
+	c.outputStream.Encode(&c)
+	return &c, nil
+}
+
+func (c *CastV2Header) PushFrame(ts float64, data []byte) {
+	out := make([]interface{},3)
+	out[0] = ts
+	out[1] = V2OutputEvent
+	out[2] = string(data)
+	c.outputStream.Encode(out)
 }

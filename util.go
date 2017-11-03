@@ -1,10 +1,11 @@
 package asciicast
 
 import (
-	"time"
-	"strconv"
 	"fmt"
+	"strconv"
+	"time"
 )
+
 type JSONTimestamp time.Time
 
 // MarshalJSON defines how encoding/json marshals the object to JSON,
